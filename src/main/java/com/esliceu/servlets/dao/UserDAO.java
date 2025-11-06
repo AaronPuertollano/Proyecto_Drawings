@@ -8,7 +8,6 @@ import java.util.List;
 public class UserDAO {
     private static final List<User> users = new ArrayList<>();
 
-    // Registrar un nuevo usuario
     public static boolean addUser(User user) {
         for (User u : users) {
             if (u.getUsername().equals(user.getUsername())) {
@@ -19,7 +18,6 @@ public class UserDAO {
         return true;
     }
 
-    // Verificar credenciales
     public static boolean checkUser(String username, String password) {
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {

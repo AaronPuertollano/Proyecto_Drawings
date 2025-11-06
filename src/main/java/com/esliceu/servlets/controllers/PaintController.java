@@ -1,13 +1,20 @@
 package com.esliceu.servlets.controllers;
 
 
+import com.esliceu.servlets.models.Paint;
+import com.esliceu.servlets.services.PaintService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
+import java.time.LocalDate;
 
 @WebServlet(value = "/paint")
 public class PaintController extends HttpServlet {
@@ -24,4 +31,50 @@ public class PaintController extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/jsp/paint.jsp")
                 .forward(req, resp);
     }
+
+    private PaintService paintService = PaintService.getInstance();
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Leer peticion
+        StringBuilder jsonBuilder = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Convertir en mapa y extraer valores
+        Map<String, Object> dataMap = mapper.readValue(jsonBuilder.toString(), Map.class);
+        String name = (String) dataMap.get("name");
+        Object drawingDataObj = dataMap.get("drawingData");
+        String drawingDataJson = mapper.writeValueAsString(drawingDataObj);
+        LocalDate myObj = LocalDate.now();
+
+        HttpSession session = request.getSession();
+        String owner = (String) session.getAttribute("user");
+
+        if (paintService.selectPaintByNameAndOwner(name, owner)) {
+            response.getWriter().write("{\"success\": false, \"message\": \"You you have a paint with that name.\"}");
+            return;
+        }
+
+        Paint paint = new Paint(name, drawingDataJson, owner, myObj);
+        boolean saved = paintService.savePaint(paint);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        if (saved) {
+            response.getWriter().write("{\"success\": true}");
+        } else {
+            response.getWriter().write("{\"success\": false, \"message\": \"Failed to save paint.\"}");
+        }
+    }
+
 }

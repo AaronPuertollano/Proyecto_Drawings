@@ -42,7 +42,7 @@ public class LoginController extends HttpServlet {
         if (userExist) {
             HttpSession session = req.getSession();
             session.setAttribute("user", username);
-            resp.sendRedirect("/paint"); // TODO: crear servlet o JSP “paint”
+            resp.sendRedirect("/paint");
         } else {
             req.setAttribute("message", "Username or password incorrect");
             req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
