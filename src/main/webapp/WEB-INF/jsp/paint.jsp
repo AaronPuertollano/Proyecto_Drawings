@@ -486,15 +486,14 @@
         return;
       }
 
-      const contenido = {
-        name: namePaint,
-        drawingData: shapes
-      };
+      const params = new URLSearchParams();
+      params.append("name", namePaint);
+      params.append("drawingData", JSON.stringify(shapes));
 
       fetch("/paint", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contenido)
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString()
       })
       .then(res => res.json())
       .then(data => {

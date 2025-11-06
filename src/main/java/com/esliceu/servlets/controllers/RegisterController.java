@@ -36,14 +36,14 @@ public class RegisterController extends HttpServlet {
         }
 
         User newUser = new User(name, username, password);
+
         boolean success = UserDAO.addUser(newUser);
 
         if (success) {
-
-            req.setAttribute("message", "User registered successfully! You can now log in.");
             resp.sendRedirect("/login");
         } else {
             // Usuario ya existe
+            req.setAttribute("message", "Error, change the username");
             req.getRequestDispatcher("/WEB-INF/jsp/register.jsp")
                     .forward(req, resp);
         }

@@ -38,29 +38,20 @@ public class PaintController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Leer peticion
-        StringBuilder jsonBuilder = new StringBuilder();
-        try (BufferedReader reader = request.getReader()) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonBuilder.append(line);
-            }
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        // Convertir en mapa y extraer valores
-        Map<String, Object> dataMap = mapper.readValue(jsonBuilder.toString(), Map.class);
-        String name = (String) dataMap.get("name");
-        Object drawingDataObj = dataMap.get("drawingData");
-        String drawingDataJson = mapper.writeValueAsString(drawingDataObj);
+        String name = request.getParameter("name");
+        String drawingDataJson = request.getParameter("drawingData");
         LocalDate myObj = LocalDate.now();
 
         HttpSession session = request.getSession();
         String owner = (String) session.getAttribute("user");
 
+        if (name == null || drawingDataJson == null) {
+            response.getWriter().write("{\"success\": false, \"message\": \"missing parameters\"}");
+            return;
+        }
+
         if (paintService.selectPaintByNameAndOwner(name, owner)) {
-            response.getWriter().write("{\"success\": false, \"message\": \"You you have a paint with that name.\"}");
+            response.getWriter().write("{\"success\": false, \"message\": \"You already have a paint with that name.\"}");
             return;
         }
 

@@ -111,18 +111,24 @@
 
         <p>NAME</p>
 
-        <input type="text" name="name">
+        <input type="text" name="name" required>
 
         <p>USERNAME</p>
 
-        <input type="text" name="username">
+        <input type="text" name="username" required>
 
         <p>PASSWORD</p>
 
-        <input type="password" name="password">
+        <input type="password" name="password" minlength="5" required>
         <p></p>
         <input type="submit" name="SEND">
     </form>
+
+    <c:if test="${not empty message}">
+        <div style="color: red;">
+            ${message}
+        </div>
+    </c:if>
 
     <p>Ya tienes cuenta? <a href="login">Login</a></p>
 </div>
