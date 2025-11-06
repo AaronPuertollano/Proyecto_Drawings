@@ -1,7 +1,6 @@
 package com.esliceu.servlets.controllers;
 
 
-import com.esliceu.servlets.dao.UserDAO;
 import com.esliceu.servlets.services.UserService;
 
 import javax.servlet.ServletException;
@@ -15,7 +14,7 @@ import java.io.IOException;
 @WebServlet(value = "/login")
 public class LoginController extends HttpServlet {
 
-    private final UserService userService = new UserService();
+    private UserService userService = UserService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

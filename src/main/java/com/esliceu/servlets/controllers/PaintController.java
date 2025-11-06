@@ -51,7 +51,7 @@ public class PaintController extends HttpServlet {
         }
 
         if (paintService.selectPaintByNameAndOwner(name, owner)) {
-            response.getWriter().write("{\"success\": false, \"message\": \"You already have a paint with that name.\"}");
+            response.getWriter().write("{\"success\": false, \"message\": \"You have a paint with that name.\"}");
             return;
         }
 

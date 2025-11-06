@@ -51,7 +51,7 @@ public class ViewController extends HttpServlet {
         }
 
         if (paint == null) {
-            resp.sendRedirect("/public");
+            resp.sendRedirect("/paint");
             return;
         }
 

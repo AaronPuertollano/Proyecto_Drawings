@@ -1,8 +1,10 @@
 package com.esliceu.servlets.controllers;
 
 
-import com.esliceu.servlets.dao.UserDAO;
+import com.esliceu.servlets.dao.UserDAOInMemory;
 import com.esliceu.servlets.models.User;
+import com.esliceu.servlets.services.PaintService;
+import com.esliceu.servlets.services.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +21,8 @@ public class RegisterController extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/jsp/register.jsp")
                 .forward(req, resp);
     }
+
+    private UserService userService = UserService.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -37,7 +41,9 @@ public class RegisterController extends HttpServlet {
 
         User newUser = new User(name, username, password);
 
-        boolean success = UserDAO.addUser(newUser);
+        boolean success = userService.addUser(newUser);
+        /*
+        boolean success = UserDAOInMemory.addUser(newUser);*/
 
         if (success) {
             resp.sendRedirect("/login");
